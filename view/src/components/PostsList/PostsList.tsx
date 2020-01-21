@@ -3,7 +3,7 @@ import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 import PostCard from '../PostCard/PostCard';
 
-// This is the query that Apollo Client will send to the WP site.
+// Query that Apollo Client sends to WP.
 const POSTS_SEARCH_QUERY = gql`
   query POSTS_SEARCH_QUERY($searchQuery: String!) {
     posts(where: { search: $searchQuery }) {
