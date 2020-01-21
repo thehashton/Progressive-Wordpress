@@ -1,0 +1,64 @@
+---
+version: "3.7"
+volumes:
+  db-data:
+    name: wf2__wp-playground__db-data
+services:
+  wp:
+    container_name: wf2__wp-playground__wp
+    image: "wordpress:cli"
+    volumes:
+      - "/Users/hghazni/Sites/wp-playground:/var/www"
+    depends_on:
+      - php
+    working_dir: /var/www
+    environment:
+      - DB_HOST=db
+    init: true
+  php-debug:
+    container_name: wf2__wp-playground__php-debug
+    image: "wearejh/php:7.3-m2"
+    volumes:
+      - "/Users/hghazni/Sites/wp-playground:/var/www"
+    depends_on:
+      - db
+    working_dir: /var/www
+    environment:
+      - XDEBUG_ENABLE=true
+  db:
+    container_name: wf2__wp-playground__db
+    image: "mysql:5.7"
+    volumes:
+      - "db-data:/var/lib/mysql"
+    ports:
+      - "3307:3306"
+    environment:
+      - MYSQL_DATABASE=docker
+      - MYSQL_USER=docker
+      - MYSQL_PASSWORD=docker
+      - MYSQL_ROOT_PASSWORD=docker
+  nginx:
+    container_name: wf2__wp-playground__nginx
+    image: "wearejh/nginx:stable-m2"
+    volumes:
+      - "/Users/hghazni/Sites/wp-playground:/var/www"
+      - "/Users/hghazni/Sites/wp-playground/.wf2_wp_wp-playground/nginx/nginx.conf:/etc/nginx/nginx.conf"
+      - "/Users/hghazni/Sites/wp-playground/.wf2_wp_wp-playground/nginx/host.conf:/etc/nginx/conf.d/default.conf"
+    depends_on:
+      - php
+    ports:
+      - "8080:80"
+    working_dir: /var/www
+  php:
+    container_name: wf2__wp-playground__php
+    image: "wearejh/php:7.3-m2"
+    volumes:
+      - "/Users/hghazni/Sites/wp-playground:/var/www"
+    depends_on:
+      - db
+    working_dir: /var/www
+    environment:
+      - XDEBUG_CONFIG=remote_host=host.docker.internal
+      - "PHP_IDE_CONFIG=serverName=localhost:8080"
+      - "PHP_MEMORY_LIMIT=\"2G\""
+      - DB_HOST=db

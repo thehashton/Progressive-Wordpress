@@ -1,0 +1,5 @@
+---
+recipe: Wp
+domains:
+  - "localhost:8080"
+origin: ~
