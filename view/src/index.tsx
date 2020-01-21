@@ -6,7 +6,7 @@ import './index.css';
 import PostsSearch from './components/PostSearch';
 
 const client = new ApolloClient({
-  // Change this to the URL of your WordPress site.
+  // URL of your WordPress site.
   uri: "http://localhost:8080/wp/graphql"
 });
 
